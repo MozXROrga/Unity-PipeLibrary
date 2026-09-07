@@ -1,0 +1,31 @@
+cmake_minimum_required(VERSION 3.22)
+
+project(TestServer)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/test/server")
+
+file(GLOB_RECURSE SRC_MAIN
+    "${PROJECT_SOURCE_DIR}/src/main.cpp"
+)
+
+include_directories(
+    ${CMAKE_SOURCE_DIR}/include
+)
+
+add_executable(TestServer ${SRC_MAIN})
+
+set_target_properties(TestServer PROPERTIES
+    CXX_STANDARD 17)
+
+source_group("" FILES ${SRC_MAIN})
+
+target_link_libraries(TestServer IPCLib)
+
+# add_custom_command(TARGET TestServer PRE_BUILD
+#     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/include/ipcLib.h ${CMAKE_SOURCE_DIR}/bin/test/server/ipcLib
+# )
+
+add_custom_command(TARGET TestServer POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/lib/$(Configuration)/IPCLib.dll ${CMAKE_SOURCE_DIR}/bin/test/server/$(Configuration)/IPCLib.dll
+)
+
